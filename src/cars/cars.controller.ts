@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { log } from 'console';
 import { CarsService } from './cars.service';
 
@@ -17,7 +17,7 @@ export class CarsController {
     }
 
     @Get(':id')
-    getCarById(@Param('id',ParseIntPipe) id :number){
+    getCarById(@Param('id',new ParseUUIDPipe({version:'4'})) id :string){
         console.log({params:id})
        return this.carsService.getCarById(id);
 
