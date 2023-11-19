@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ICar } from './models/car.interface';
 import {v4 as uuid} from 'uuid'
+import { CarPost } from './models/dtos/carPost.dto';
 
 @Injectable()
 export class CarsService {
-    create(car:ICar) {
-    this.cars=[...this.cars,car];
+    create(car:CarPost) {
+    this.cars=[...this.cars,{id: uuid(),brand: car.brand,name:car.name}];
     }
 
     private cars:Array<ICar> = [   { id: uuid(), name: 'Modelo A', brand: 'Marca X' },
