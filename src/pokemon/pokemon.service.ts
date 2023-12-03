@@ -24,13 +24,17 @@ export class PokemonService {
       const pokemon = await this.pokemonModel.create(createPokemonDto);
       return pokemon;
     } catch (error) {
-      if (error.code == 11000) {
-        throw new BadRequestException(
-          `Pokemon ya existe ${JSON.stringify(error.keyValue)}`,
-        );
-        console.error(error);
-        throw new InternalServerErrorException('Error interno ');
-      }
+      this.handleErrorDb(error);
+    }
+  }
+
+  private handleErrorDb(error) {
+    if (error.code == 11000) {
+      throw new BadRequestException(
+        `Pokemon ya existe ${JSON.stringify(error.keyValue)}`,
+      );
+      console.error(error);
+      throw new InternalServerErrorException('Error interno ');
     }
   }
 
@@ -57,11 +61,24 @@ export class PokemonService {
     return pokemon;
   }
 
-  update(id: number, updatePokemonDto: UpdatePokemonDto) {
-    return `This action updates a #${id} pokemon`;
+  async update(searchTerm: string, updatePokemonDto: UpdatePokemonDto) {
+    const pokemon = await this.findOne(searchTerm);
+
+    if (updatePokemonDto.name) {
+      updatePokemonDto.name = updatePokemonDto.name.toLowerCase();
+    }
+    try {
+      await pokemon.updateOne(updatePokemonDto, { new: true });
+    } catch (error) {
+      this.handleErrorDb(error);
+    }
+
+    return { ...pokemon.toJSON(), ...updatePokemonDto };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pokemon`;
+  async remove(searchTerm: string) {
+    const pokemon = await this.findOne(searchTerm);
+    await pokemon.deleteOne();
+
   }
 }
