@@ -77,8 +77,11 @@ export class PokemonService {
   }
 
   async remove(searchTerm: string) {
-    const pokemon = await this.findOne(searchTerm);
-    await pokemon.deleteOne();
+    const { deletedCount } = await this.pokemonModel.deleteOne({
+      _id: searchTerm,
+    });
 
+    if (deletedCount === 0)
+      throw new NotFoundException('No se encontro la entidad');
   }
 }
