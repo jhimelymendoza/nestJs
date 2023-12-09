@@ -47,6 +47,7 @@ export class PokemonService {
 
     if (!isNaN(+searchTerm)) {
       pokemon = await this.pokemonModel.findOne({ no: searchTerm });
+      return pokemon;
     }
 
     pokemon = isValidObjectId(searchTerm)
