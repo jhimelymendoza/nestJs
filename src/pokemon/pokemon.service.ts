@@ -47,7 +47,7 @@ export class PokemonService {
   findAll(paginationDto?: PaginationDto) {
     return this.pokemonModel
       .find()
-      .limit(this.defaultLimit ?? 5)
+      .limit(paginationDto.limit ?? this.defaultLimit ?? 5)
       .skip(paginationDto?.offset ?? 0)
       .sort({ no: 1 })
       .select('-__v');
