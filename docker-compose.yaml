@@ -6,7 +6,7 @@ services:
     ports:
       - 27017:27017
     environment:
-      MONGODB_DATABASE: 'nest-pokemon'
+      MONGODB_DATABASE:  ${NAME_DB}
     volumes:
       - ./mongo:/data/db
   
